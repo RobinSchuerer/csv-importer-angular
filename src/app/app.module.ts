@@ -5,11 +5,13 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { DropzoneComponent } from './dropzone/dropzone/dropzone.component';
+import { ProgressbarComponent } from './dropzone/progressbar/progressbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DropzoneComponent
+    DropzoneComponent,
+    ProgressbarComponent
   ],
   imports: [
     BrowserModule,

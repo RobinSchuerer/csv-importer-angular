@@ -1,0 +1,11 @@
+.outer_progress {
+  position: relative;
+  background-color: green;
+  height: 30px;
+}
+
+.inner_progress{
+  background-color: red;
+  height: 100%;
+  width: 0%;
+}
