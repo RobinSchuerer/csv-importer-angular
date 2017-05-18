@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, HostListener, OnInit, ViewChild} from "@angular/core";
-import {Observable} from "rxjs/Observable";
-import {ReplaySubject} from "rxjs/ReplaySubject";
-import {ProgressbarComponent} from "../progressbar/progressbar.component";
+import {AfterViewInit, Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {ProgressbarComponent} from '../progressbar/progressbar.component';
 
 @Component({
   selector: 'app-dropzone',
@@ -9,18 +9,17 @@ import {ProgressbarComponent} from "../progressbar/progressbar.component";
   styleUrls: ['./dropzone.component.css']
 })
 export class DropzoneComponent implements OnInit, AfterViewInit {
-  progressObserver: any;
+
+  private progressObserver: ReplaySubject<Number> = new ReplaySubject<Number>();
 
   @ViewChild(ProgressbarComponent) progressBar: ProgressbarComponent;
 
   constructor() {
-    this.progressObserver = new ReplaySubject<Number>();
   }
 
   ngOnInit() {
     this.progressObserver.subscribe((progress) => {
       this.progressBar.updateProgress(progress);
-      console.log(progress);
     });
   }
 
@@ -39,12 +38,6 @@ export class DropzoneComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     const file: File = event.dataTransfer.files[0];
     console.log('drop file: ' + file.name + ' with type: ' + file.type);
-
-    // if (file.type !== 'text/csv') {
-    //   alert('Es können nur CSV Dateien hochgeladen werden!');
-    //   return;
-    // }
-
     this.upload(file).subscribe((result) => console.log(result));
 
   }
@@ -68,7 +61,7 @@ export class DropzoneComponent implements OnInit, AfterViewInit {
       };
 
       xhr.upload.onprogress = (event) => {
-        const progress = Math.round(event.loaded / event.total * 100);
+        const progress = this.calculateProgress(event);
 
         this.progressObserver.next(progress);
       };
@@ -76,6 +69,11 @@ export class DropzoneComponent implements OnInit, AfterViewInit {
       xhr.open('POST', '/api/csv', true);
       xhr.send(formData);
     });
+  }
+
+  private calculateProgress(event) {
+    const progress = Math.round(event.loaded / event.total * 100);
+    return progress;
   }
 
 }
