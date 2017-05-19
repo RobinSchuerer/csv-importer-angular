@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { DropzoneComponent } from './dropzone/dropzone/dropzone.component';
 import { ProgressbarComponent } from './dropzone/progressbar/progressbar.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ProgressbarComponent } from './dropzone/progressbar/progressbar.compone
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    BsDropdownModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
