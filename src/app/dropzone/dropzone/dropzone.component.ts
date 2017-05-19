@@ -8,24 +8,16 @@ import {ProgressbarComponent} from '../progressbar/progressbar.component';
   templateUrl: './dropzone.component.html',
   styleUrls: ['./dropzone.component.css']
 })
-export class DropzoneComponent implements OnInit, AfterViewInit {
+export class DropZoneComponent implements OnInit {
 
-  private progressObserver: ReplaySubject<Number> = new ReplaySubject<Number>();
-
-  @ViewChild(ProgressbarComponent) progressBar: ProgressbarComponent;
+  private fileObserver: ReplaySubject<File> = new ReplaySubject<File>();
 
   constructor() {
   }
 
   ngOnInit() {
-    this.progressObserver.subscribe((progress) => {
-      this.progressBar.updateProgress(progress);
-    });
   }
 
-  ngAfterViewInit() {
-    this.progressBar.updateProgress(0);
-  }
 
   @HostListener('dragover', ['$event'])
   public onDragOver(event: DragEvent): void {
@@ -38,42 +30,15 @@ export class DropzoneComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     const file: File = event.dataTransfer.files[0];
     console.log('drop file: ' + file.name + ' with type: ' + file.type);
-    this.upload(file).subscribe((result) => console.log(result));
+
+    this.fileObserver.next(file);
+    // this.upload(file).subscribe((result) => console.log(result));
 
   }
 
-  private upload(toUpload: File) {
-    return Observable.create(observer => {
-      const formData: FormData = new FormData(),
-        xhr: XMLHttpRequest = new XMLHttpRequest();
-
-      formData.append('file', toUpload, toUpload.name);
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            console.log('complete');
-            observer.complete();
-          } else {
-            observer.error(xhr.response);
-          }
-        }
-      };
-
-      xhr.upload.onprogress = (event) => {
-        const progress = this.calculateProgress(event);
-
-        this.progressObserver.next(progress);
-      };
-
-      xhr.open('POST', '/api/csv', true);
-      xhr.send(formData);
-    });
+  public onFileSelection(): Observable<File> {
+    return this.fileObserver;
   }
 
-  private calculateProgress(event) {
-    const progress = Math.round(event.loaded / event.total * 100);
-    return progress;
-  }
 
 }

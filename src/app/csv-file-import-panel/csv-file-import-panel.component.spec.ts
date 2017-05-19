@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DropZoneComponent } from './dropzone.component';
+import { CsvFileImportComponent } from './csv-file-import-panel.component';
 
-describe('DropZoneComponent', () => {
-  let component: DropZoneComponent;
-  let fixture: ComponentFixture<DropZoneComponent>;
+describe('CsvFileImportComponent', () => {
+  let component: CsvFileImportComponent;
+  let fixture: ComponentFixture<CsvFileImportComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DropZoneComponent ]
+      declarations: [ CsvFileImportComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DropZoneComponent);
+    fixture = TestBed.createComponent(CsvFileImportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

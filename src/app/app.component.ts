@@ -1,4 +1,5 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, ViewChild} from '@angular/core';
+import {CsvFileImportComponent} from './csv-file-import-panel/csv-file-import-panel.component';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,9 @@ import {Component, HostListener} from '@angular/core';
 })
 export class AppComponent {
 
+  @ViewChild(CsvFileImportComponent) fileImport: CsvFileImportComponent;
+
+  public showImportDialog() {
+    this.fileImport.show();
+  }
 }

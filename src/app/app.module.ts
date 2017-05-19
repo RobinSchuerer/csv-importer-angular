@@ -4,15 +4,20 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { DropzoneComponent } from './dropzone/dropzone/dropzone.component';
+import { DropZoneComponent } from './dropzone/dropzone/dropzone.component';
 import { ProgressbarComponent } from './dropzone/progressbar/progressbar.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ProgressModalWindowComponent } from './progress-modal-window/progress-modal-window.component';
+import { CsvFileImportComponent } from './csv-file-import-panel/csv-file-import-panel.component';
+import {FileUploadServiceService} from './file-upload-service.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DropzoneComponent,
-    ProgressbarComponent
+    DropZoneComponent,
+    ProgressbarComponent,
+    ProgressModalWindowComponent,
+    CsvFileImportComponent
   ],
   imports: [
     BrowserModule,
