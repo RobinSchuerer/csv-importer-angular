@@ -9,7 +9,7 @@ import { ProgressbarComponent } from './dropzone/progressbar/progressbar.compone
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressModalWindowComponent } from './progress-modal-window/progress-modal-window.component';
 import { CsvFileImportComponent } from './csv-file-import-panel/csv-file-import-panel.component';
-import {FileUploadServiceService} from './file-upload-service.service';
+import {FileUploadService} from './file-upload.service';
 
 @NgModule({
   declarations: [

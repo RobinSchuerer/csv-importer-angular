@@ -1,13 +1,13 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ProgressbarComponent} from '../dropzone/progressbar/progressbar.component';
-import {FileUploadServiceService} from '../file-upload-service.service';
+import {FileUploadService} from '../file-upload.service';
 import {DropZoneComponent} from '../dropzone/dropzone/dropzone.component';
 
 @Component({
   selector: 'app-csv-file-import-panel',
   templateUrl: './csv-file-import-panel.component.html',
   styleUrls: ['./csv-file-import-panel.component.scss'],
-  providers: [FileUploadServiceService]
+  providers: [FileUploadService]
 })
 export class CsvFileImportComponent implements OnInit, AfterViewInit {
 
@@ -17,9 +17,9 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
 
   private visible: boolean;
   private isInProgress: boolean;
-  private fileUploadServiceService: FileUploadServiceService;
+  private fileUploadServiceService: FileUploadService;
 
-  constructor(fileUploadServiceService: FileUploadServiceService) {
+  constructor(fileUploadServiceService: FileUploadService) {
     this.fileUploadServiceService = fileUploadServiceService;
   }
 

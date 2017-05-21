@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
-import {Http} from '@angular/http';
+import {Http, Headers, RequestOptions} from '@angular/http';
 import {CsvUploadAndTransformation} from './csv-upload-and-transformation';
 
 @Injectable()
-export class FileUploadServiceService {
+export class FileUploadService {
 
   private http: Http;
 
@@ -87,13 +87,22 @@ export class FileUploadServiceService {
     console.log('stop polling');
 
     // call for result
+    const resultUrl = '/api/csv/result/' + ticketNumber;
+    console.log('retrieving result from:' + resultUrl);
+
+    const headers = new Headers({'Content-Type': 'application/json'});
+    const options = new RequestOptions({headers: headers});
+
+
     this.http
-      .get('/api/csv/result/' + ticketNumber)
+      .get(resultUrl, options)
       .subscribe(response => {
-        const result = response.json().data;
-        console.log('result' + result);
-        return observer.next(result);
-      });
+          console.log('response: ' + response);
+          const result = response.json();
+          console.log('result: ' + result);
+          return observer.next(result);
+        },
+        error => console.error(error));
   }
 
   private calculateProgress(event) {
