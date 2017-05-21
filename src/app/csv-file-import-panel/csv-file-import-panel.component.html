@@ -14,7 +14,8 @@
 
       <div class="modal-body">
         <div class="container-fluid">
-          <div class="row">
+
+          <div *ngIf="!isInProgress" class="row">
             <div class="col-md-12">
               <app-dropzone>
                 Drop Files
@@ -29,10 +30,20 @@
               <app-progressbar #uploadProgress></app-progressbar>
             </div>
           </div>
-          <div class="row">
+
+          <div *ngIf="isInProgress" class="row">
             <div class="col-md-3"><label>Data transformation</label></div>
             <div class="col-md-9 col-md-offset-3">
               <app-progressbar #transformationProgress></app-progressbar>
+            </div>
+          </div>
+
+          <div *ngIf="hasData" class="row">
+            <div class="col-md-3"><label>Result</label></div>
+            <div class="col-md-9 col-md-offset-3">
+              <div class="alert alert-info">
+                Received data. {{dataSets}}
+              </div>
             </div>
           </div>
         </div>

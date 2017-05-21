@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
 import {Http, Headers, RequestOptions} from '@angular/http';
-import {CsvUploadAndTransformation} from './csv-upload-and-transformation';
+import {CsvUploadAndTransformation} from '../csv-upload-and-transformation';
 
 @Injectable()
 export class FileUploadService {
@@ -18,7 +18,7 @@ export class FileUploadService {
     const uploadProgressSubject: ReplaySubject<Number> = new ReplaySubject<Number>();
     const transformationProgress: ReplaySubject<Number> = new ReplaySubject<Number>();
 
-    const result = Observable.create(observer => {
+    const result2 = Observable.create(observer => {
       const formData: FormData = new FormData(),
         xhr: XMLHttpRequest = new XMLHttpRequest();
 
@@ -42,6 +42,7 @@ export class FileUploadService {
                   console.log('status: ' + progress);
                   if (this.hasEnded(progress)) {
                     this.getResultAndStopPolling(subscription, ticketNumber, observer);
+                    // observer.next('okay');
                   }
                   transformationProgress.next(progress);
                 }, error => {
@@ -50,8 +51,6 @@ export class FileUploadService {
 
                 });
             });
-
-          observer.complete();
         } else {
           observer.error(xhr.response);
         }
@@ -67,10 +66,9 @@ export class FileUploadService {
       xhr.send(formData);
     });
 
-
     return CsvUploadAndTransformation
       .newBuilder()
-      .withResultObservable(result)
+      .withResultObservable(result2)
       .withUploadProgressObservable(uploadProgressSubject)
       .withTransformationProgressObservable(transformationProgress)
       .build();

@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ProgressbarComponent} from '../dropzone/progressbar/progressbar.component';
-import {FileUploadService} from '../file-upload.service';
-import {DropZoneComponent} from '../dropzone/dropzone/dropzone.component';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ProgressbarComponent} from './dropzone/progressbar/progressbar.component';
+import {FileUploadService} from '../service/file-upload.service';
+import {DropZoneComponent} from './dropzone/dropzone/dropzone.component';
 
 @Component({
   selector: 'app-csv-file-import-panel',
@@ -17,7 +17,9 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
 
   private visible: boolean;
   private isInProgress: boolean;
+  private hasData: boolean;
   private fileUploadServiceService: FileUploadService;
+  private dataSets: any;
 
   constructor(fileUploadServiceService: FileUploadService) {
     this.fileUploadServiceService = fileUploadServiceService;
@@ -25,19 +27,24 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.visible = false;
-    this.isInProgress = true;
+    this.isInProgress = false;
+    this.hasData = false;
   }
 
   ngAfterViewInit(): void {
     this.dropZone.onFileSelection().subscribe(file => {
-      const csvUploadAndTransformation = this.fileUploadServiceService.upload(file);
+      this.isInProgress = true;
+      this.hasData = false;
+      const fileUploadStatus = this.fileUploadServiceService.upload(file);
 
-      csvUploadAndTransformation.subscribeToUploadProgress(
-        progress => this.uploadingProgress.updateProgress(progress));
-      csvUploadAndTransformation.subscribeToTransformationProgress(
-        progress => this.transformationProgress.updateProgress(progress));
-
-      csvUploadAndTransformation.subscribeToResult(result => console.log('result: ' + result));
+      fileUploadStatus.subscribeToUploadProgress(progress => this.uploadingProgress.updateProgress(progress));
+      fileUploadStatus.subscribeToTransformationProgress(progress => this.transformationProgress.updateProgress(progress));
+      fileUploadStatus.subscribeToResult(result => {
+        this.isInProgress = false;
+        this.hasData = true;
+        this.dataSets = result;
+        console.log('result: ' + result);
+      });
     });
   }
 
