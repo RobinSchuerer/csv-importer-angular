@@ -17,6 +17,7 @@ export class FileUploadServiceService {
 
     const uploadProgressSubject: ReplaySubject<Number> = new ReplaySubject<Number>();
     const transformationProgress: ReplaySubject<Number> = new ReplaySubject<Number>();
+
     const result = Observable.create(observer => {
       const formData: FormData = new FormData(),
         xhr: XMLHttpRequest = new XMLHttpRequest();
@@ -29,25 +30,24 @@ export class FileUploadServiceService {
         }
 
         if (xhr.status === 200) {
-          const ticketNumber: String = observer.resolve(xhr.response);
+          const ticketNumber: String = xhr.response;
 
           const subscription = Observable
             .interval(100)
             .subscribe(() => {
               this.http
-                .get('/api/status/' + ticketNumber)
+                .get('/api/csv/status/' + ticketNumber)
                 .map(response => Number.parseInt(response.text()))
                 .subscribe(progress => {
-                  if (progress === 100) {
-
-                    // to end the polling
-                    subscription.unsubscribe();
-                    this.http
-                      .get('/api/final/' + ticketNumber)
-                      .subscribe(response => observer.next(response));
+                  console.log('status: ' + progress);
+                  if (this.hasEnded(progress)) {
+                    this.getResultAndStopPolling(subscription, ticketNumber, observer);
                   }
-
                   transformationProgress.next(progress);
+                }, error => {
+                  subscription.unsubscribe();
+                  return console.log(error);
+
                 });
             });
 
@@ -74,6 +74,26 @@ export class FileUploadServiceService {
       .withUploadProgressObservable(uploadProgressSubject)
       .withTransformationProgressObservable(transformationProgress)
       .build();
+  }
+
+  private hasEnded(progress) {
+    return progress === 100;
+  }
+
+  private getResultAndStopPolling(subscription: any, ticketNumber: String, observer) {
+    // to end the polling
+    subscription.unsubscribe();
+
+    console.log('stop polling');
+
+    // call for result
+    this.http
+      .get('/api/csv/result/' + ticketNumber)
+      .subscribe(response => {
+        const result = response.json().data;
+        console.log('result' + result);
+        return observer.next(result);
+      });
   }
 
   private calculateProgress(event) {
