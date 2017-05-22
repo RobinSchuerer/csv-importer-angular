@@ -2,6 +2,7 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@a
 import {ProgressbarComponent} from './dropzone/progressbar/progressbar.component';
 import {FileUploadService} from '../service/file-upload.service';
 import {DropZoneComponent} from './dropzone/dropzone/dropzone.component';
+import {AccountMovement} from '../domain/account-movement';
 
 @Component({
   selector: 'app-csv-file-import-panel',
@@ -19,7 +20,7 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
   private isInProgress: boolean;
   private hasData: boolean;
   private fileUploadServiceService: FileUploadService;
-  private dataSets: any;
+  private dataSets: AccountMovement[];
 
   constructor(fileUploadServiceService: FileUploadService) {
     this.fileUploadServiceService = fileUploadServiceService;
@@ -43,7 +44,7 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
         this.isInProgress = false;
         this.hasData = true;
         this.dataSets = result;
-        console.log('result: ' + result);
+        console.log('result: ' + this.dataSets);
       });
     });
   }

@@ -3,6 +3,7 @@ import {Observable} from 'rxjs/Rx';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
 import {Http, Headers, RequestOptions} from '@angular/http';
 import {CsvUploadAndTransformation} from '../csv-upload-and-transformation';
+import {AccountMovement} from '../domain/account-movement';
 
 @Injectable()
 export class FileUploadService {
@@ -19,8 +20,8 @@ export class FileUploadService {
     const transformationProgress: ReplaySubject<Number> = new ReplaySubject<Number>();
 
     const result2 = Observable.create(observer => {
-      const formData: FormData = new FormData(),
-        xhr: XMLHttpRequest = new XMLHttpRequest();
+      const formData: FormData = new FormData();
+      const xhr: XMLHttpRequest = new XMLHttpRequest();
 
       formData.append('file', toUpload, toUpload.name);
 
@@ -42,7 +43,6 @@ export class FileUploadService {
                   console.log('status: ' + progress);
                   if (this.hasEnded(progress)) {
                     this.getResultAndStopPolling(subscription, ticketNumber, observer);
-                    // observer.next('okay');
                   }
                   transformationProgress.next(progress);
                 }, error => {
@@ -56,11 +56,7 @@ export class FileUploadService {
         }
       };
 
-      xhr.upload.onprogress = (event) => {
-        const progress = this.calculateProgress(event);
-
-        uploadProgressSubject.next(progress);
-      };
+      xhr.upload.onprogress = this.onProgress(uploadProgressSubject);
 
       xhr.open('POST', '/api/csv', true);
       xhr.send(formData);
@@ -72,6 +68,14 @@ export class FileUploadService {
       .withUploadProgressObservable(uploadProgressSubject)
       .withTransformationProgressObservable(transformationProgress)
       .build();
+  }
+
+  private onProgress(uploadProgressSubject: ReplaySubject<Number>) {
+    return (event) => {
+      const progress = this.calculateProgress(event);
+
+      uploadProgressSubject.next(progress);
+    };
   }
 
   private hasEnded(progress) {
@@ -95,8 +99,7 @@ export class FileUploadService {
     this.http
       .get(resultUrl, options)
       .subscribe(response => {
-          console.log('response: ' + response);
-          const result = response.json();
+          const result = response.json() as AccountMovement[];
           console.log('result: ' + result);
           return observer.next(result);
         },
