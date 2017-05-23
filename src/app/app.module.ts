@@ -10,6 +10,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressModalWindowComponent } from './csv-file-import-panel/progress-modal-window/progress-modal-window.component';
 import { CsvFileImportComponent } from './csv-file-import-panel/csv-file-import-panel.component';
 import {FileUploadService} from './service/file-upload.service';
+import { DataTableComponent } from './data-table/data-table.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {FileUploadService} from './service/file-upload.service';
     DropZoneComponent,
     ProgressbarComponent,
     ProgressModalWindowComponent,
-    CsvFileImportComponent
+    CsvFileImportComponent,
+    DataTableComponent
   ],
   imports: [
     BrowserModule,

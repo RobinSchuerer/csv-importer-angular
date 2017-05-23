@@ -7,8 +7,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">CSV File Import</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="close"(click)="hide()" >
+          <span>&times;</span>
         </button>
       </div>
 
@@ -42,7 +42,7 @@
             <div class="col-md-3"><label>Result</label></div>
             <div class="col-md-9 col-md-offset-3">
               <div class="alert alert-info">
-                Received data. {{dataSets}}
+                Received {{dataSets.length}} datasets.
               </div>
             </div>
           </div>
@@ -50,7 +50,8 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Accept datasets</button>
+        <button type="button" class="btn btn-danger" (click)="reset()">Discard data</button>
+        <button type="button" class="btn btn-primary" (click)="takeData()">Accept datasets</button>
       </div>
     </div>
   </div>

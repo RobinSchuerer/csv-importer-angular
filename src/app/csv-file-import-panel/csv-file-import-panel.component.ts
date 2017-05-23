@@ -3,12 +3,13 @@ import {ProgressbarComponent} from './dropzone/progressbar/progressbar.component
 import {FileUploadService} from '../service/file-upload.service';
 import {DropZoneComponent} from './dropzone/dropzone/dropzone.component';
 import {AccountMovement} from '../domain/account-movement';
+import {DataService} from '../service/data.service';
 
 @Component({
   selector: 'app-csv-file-import-panel',
   templateUrl: './csv-file-import-panel.component.html',
   styleUrls: ['./csv-file-import-panel.component.scss'],
-  providers: [FileUploadService]
+  providers: [FileUploadService, DataService]
 })
 export class CsvFileImportComponent implements OnInit, AfterViewInit {
 
@@ -22,7 +23,7 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
   private fileUploadServiceService: FileUploadService;
   private dataSets: AccountMovement[];
 
-  constructor(fileUploadServiceService: FileUploadService) {
+  constructor(fileUploadServiceService: FileUploadService, private dataService: DataService) {
     this.fileUploadServiceService = fileUploadServiceService;
   }
 
@@ -53,6 +54,10 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
     this.visible = true;
   }
 
+  public hide() {
+    this.visible = false;
+  }
+
   public displayStyle(): String {
     if (!this.visible) {
       return 'none';
@@ -60,4 +65,13 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
     return 'block';
   }
 
+  public reset() {
+    this.isInProgress = false;
+    this.hasData = false;
+  }
+
+  public takeData() {
+    this.dataService.setDataSets(this.dataSets);
+    this.visible = false;
+  }
 }
