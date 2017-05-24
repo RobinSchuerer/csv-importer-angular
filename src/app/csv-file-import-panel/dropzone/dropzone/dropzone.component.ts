@@ -1,7 +1,5 @@
-import {AfterViewInit, Component, HostListener, OnInit, ViewChild} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
-import {ProgressbarComponent} from '../progressbar/progressbar.component';
 
 @Component({
   selector: 'app-dropzone',
@@ -18,7 +16,6 @@ export class DropZoneComponent implements OnInit {
   ngOnInit() {
   }
 
-
   @HostListener('dragover', ['$event'])
   public onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -32,13 +29,10 @@ export class DropZoneComponent implements OnInit {
     console.log('drop file: ' + file.name + ' with type: ' + file.type);
 
     this.fileObserver.next(file);
-    // this.upload(file).subscribe((result) => console.log(result));
-
   }
 
-  public onFileSelection(): Observable<File> {
+  public onFileSelection(): ReplaySubject<File> {
     return this.fileObserver;
   }
-
 
 }

@@ -1,5 +1,18 @@
-<ul>
-  <li *ngFor="let accountMovement of getData()">
-    {{ accountMovement }}
-  </li>
-</ul>
+<table class="table table-responsive table-striped table-hover">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Tag</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of getData()">
+    <th scope="row">1</th>
+    <td>{{data.movementDate}}</td>
+    <td>{{data.description}}</td>
+    <td contenteditable="true">{{data.tag}}</td>
+  </tr>
+  </tbody>
+</table>

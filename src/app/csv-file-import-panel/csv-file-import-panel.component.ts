@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ProgressbarComponent} from './dropzone/progressbar/progressbar.component';
 import {FileUploadService} from '../service/file-upload.service';
 import {DropZoneComponent} from './dropzone/dropzone/dropzone.component';
@@ -9,7 +9,7 @@ import {DataService} from '../service/data.service';
   selector: 'app-csv-file-import-panel',
   templateUrl: './csv-file-import-panel.component.html',
   styleUrls: ['./csv-file-import-panel.component.scss'],
-  providers: [FileUploadService, DataService]
+  providers: []
 })
 export class CsvFileImportComponent implements OnInit, AfterViewInit {
 
@@ -22,9 +22,14 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
   private hasData: boolean;
   private fileUploadServiceService: FileUploadService;
   private dataSets: AccountMovement[];
+  private dataService: DataService;
 
-  constructor(fileUploadServiceService: FileUploadService, private dataService: DataService) {
+  constructor(
+    fileUploadServiceService: FileUploadService,
+    dataService: DataService) {
+
     this.fileUploadServiceService = fileUploadServiceService;
+    this.dataService = dataService;
   }
 
   ngOnInit() {
@@ -34,7 +39,11 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dropZone.onFileSelection().subscribe(file => {
+    this.dropZone.onFileSelection().subscribe(this.handleUpload());
+  }
+
+  private handleUpload() {
+    return file => {
       this.isInProgress = true;
       this.hasData = false;
       const fileUploadStatus = this.fileUploadServiceService.upload(file);
@@ -47,7 +56,7 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
         this.dataSets = result;
         console.log('result: ' + this.dataSets);
       });
-    });
+    };
   }
 
   public show() {
@@ -68,10 +77,12 @@ export class CsvFileImportComponent implements OnInit, AfterViewInit {
   public reset() {
     this.isInProgress = false;
     this.hasData = false;
+    this.dropZone.onFileSelection().subscribe(this.handleUpload());
   }
 
   public takeData() {
     this.dataService.setDataSets(this.dataSets);
     this.visible = false;
+    this.dropZone.onFileSelection().subscribe(this.handleUpload());
   }
 }

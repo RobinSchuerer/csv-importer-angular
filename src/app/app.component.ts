@@ -1,4 +1,4 @@
-import {Component, HostListener, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {CsvFileImportComponent} from './csv-file-import-panel/csv-file-import-panel.component';
 
 @Component({
